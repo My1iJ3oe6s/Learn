@@ -71,3 +71,6 @@ Multiset<String> cargoNames = HashMultiset.create();
 |remove(E, int)	|减少给定元素在Multiset中的计数|
 |setCount(E, int)|	设置给定元素在Multiset中的计数，不可以为负数|
 |size()	|返回集合元素的总个数（包括重复的元素）|
+	
+### 4.Multimap
+
