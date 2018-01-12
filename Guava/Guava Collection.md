@@ -63,9 +63,10 @@ Multiset<String> cargoNames = HashMultiset.create();
 ```
 
 |方法|描述|
+|-|-|
 |count(E)|给定元素在Multiset中的计数|
 |elementSet()|Multiset中不重复元素的集合，类型为Set<E>|
-|entrySet()	|和Map的entrySet类似，返回Set<Multiset.Entry<E>>，其中包含的Entry支持getElement()和getCount()方法
+|entrySet()|和Map的entrySet类似，返回Set<Multiset.Entry<E>>，其中包含的Entry支持getElement()和getCount()方法
 |add(E, int)|	增加给定元素在Multiset中的计数|
 |remove(E, int)	|减少给定元素在Multiset中的计数|
 |setCount(E, int)|	设置给定元素在Multiset中的计数，不可以为负数|
