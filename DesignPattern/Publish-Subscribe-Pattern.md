@@ -165,8 +165,8 @@ public class CurrentConditionsDisplay implements Observer, DisplayElement {
 	final static private ObjectMapper mapper = new ObjectMapper();
 	
 	private float temperature;//温度
-    private float humidity;//湿度
-    private float pressure;//气压
+    	private float humidity;//湿度
+    	private float pressure;//气压
 
 	@Override
 	public <T> void update(T t) {
