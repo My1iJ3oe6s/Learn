@@ -150,8 +150,59 @@ public class WeatherSubject implements Subject {
 
 }
 
+```
+
+
+##### 观察者实现
+```
+/**
+ * 当前天气的显示牌
+ * @author JOE
+ *
+ */
+public class CurrentConditionsDisplay implements Observer, DisplayElement {
+	
+	final static private ObjectMapper mapper = new ObjectMapper();
+	
+	private float temperature;//温度
+    private float humidity;//湿度
+    private float pressure;//气压
+
+	@Override
+	public <T> void update(T t) {
+		JsonNode displayData = mapper.convertValue(t, JsonNode.class);
+		this.temperature = Float.parseFloat(displayData.get("temperature").asText());
+		this.humidity = Float.parseFloat(displayData.get("humidity").asText());
+		this.pressure = Float.parseFloat(displayData.get("pressure").asText());
+		display();
+	}
+
+	@Override
+	public void display() {
+		System.out.println("当前温度为：" + this.temperature + "℃");
+        System.out.println("当前湿度为：" + this.humidity);
+        System.out.println("当前气压为：" + this.pressure);	
+	}
+
+}
 
 ```
-#####	
 
+测试
+```
+/**
+ * 观察者模式测试
+ * @author JOE
+ *
+ */
+public class PublishSubscribeTest {
+	
+	@org.junit.Test
+	public void test(){
+		WeatherSubject weatherSubject = new WeatherSubject();
+		weatherSubject.registerObserver(new CurrentConditionsDisplay());
+		weatherSubject.setMeasurements(10, 11, 12, Lists.newArrayList(13.0f, 14.0f));
+	}
+}
+```
 
