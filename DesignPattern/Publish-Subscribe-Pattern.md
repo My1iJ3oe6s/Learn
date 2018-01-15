@@ -10,4 +10,32 @@
 假定程序中还有别的观察者，那么只要这个观察者也是相同的接口实现即可。一个被观察者可以对应多个观察者，当被观察者发生
 变化的时候，他可以将消息一一通知给所有的观察者。基于接口，而不是具体的实现——这一点为程序提供了更大的灵活性。
 ```
+### 观察者模式的应用
+##### 主题(被观察者)
+```
+/**
+ * 主题(观察者Observer 发布者publish)
+ * @author 	JOE
+ *
+ */
 
+public interface Subject {
+	
+	/**
+	 * 注册观察者
+	 */
+	void registerObserver(Observer observer);
+	
+	/**
+	 * 移除观察者
+	 */
+	void removeObserver(Observer observer);
+	
+	/**
+	 * 通知观察者</br>
+	 * 是否含有参数表示通知的观察者(空参这位注册的所有观察者)
+	 */
+	void notifyObserver();
+}
+
+```
