@@ -188,7 +188,7 @@ public class CurrentConditionsDisplay implements Observer, DisplayElement {
 
 ```
 
-测试
+##### 测试
 ```
 /**
  * 观察者模式测试
@@ -205,4 +205,7 @@ public class PublishSubscribeTest {
 	}
 }
 ```
+
+### java内置观察者模式
+
 
