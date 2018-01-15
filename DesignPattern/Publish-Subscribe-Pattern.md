@@ -20,7 +20,7 @@
 ##### 主题(被观察者)
 ```
 /**
- * 主题(观察者Observer 发布者publish)
+ * 主题(被观察者 发布者publish)
  * @author 	JOE
  *
  */
@@ -58,4 +58,100 @@ public interface Observer {
 }
 
 ```
+
+##### 公告牌用于显示的接口
+```
+/**
+ * 公告牌接口
+ * @author JOE
+ *
+ */
+public interface DisplayElement {
+
+	void display();
+	
+}
+
+```
+
+##### 主题的实现(发布的实现)
+```
+/**
+ * 天气主题
+ * 
+ * @author JOE
+ */
+public class WeatherSubject implements Subject {
+
+	private List<Observer> observers;
+
+	private float temperature;// 温度
+	private float humidity;// 湿度
+	private float pressure;// 气压
+	private List<Float> forecastTemperatures;// 未来几天的温度
+
+	public WeatherSubject() {
+		this.observers = Lists.newArrayList();
+	}
+
+	@Override
+	public void registerObserver(Observer observer) {
+		this.observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(Observer observer) {
+		this.observers.remove(observer);
+	}
+	
+	@Override
+	public <T> void notifyObserver(T t) {
+		observers.forEach(o -> {
+			o.update(t);
+		});
+	}
+
+	public void setMeasurements(float temperature, float humidity, float pressure, List<Float> forecastTemperatures) {
+		this.temperature = temperature;
+		this.humidity = humidity;
+		this.pressure = pressure;
+		this.forecastTemperatures = forecastTemperatures;
+		measureDataChange();
+	}
+
+	public void measureDataChange() {
+		Map<String, Object> map = Maps.newHashMap();
+		map.put("temperature", temperature);
+		map.put("humidity", humidity);
+		map.put("pressure", pressure);
+		map.put("forecastTemperatures", forecastTemperatures);
+		notifyObserver(map);
+	}
+
+	public List<Observer> getObservers() {
+		return observers;
+	}
+
+	public float getTemperature() {
+		return temperature;
+	}
+
+	public float getHumidity() {
+		return humidity;
+	}
+
+	public float getPressure() {
+		return pressure;
+	}
+
+	public List<Float> getForecastTemperatures() {
+		return forecastTemperatures;
+	}
+
+}
+
+
+```
+#####	
+
 
