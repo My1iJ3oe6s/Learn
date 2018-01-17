@@ -7,4 +7,4 @@
 6. [模板方法模式](https://github.com/My1iJ3oe6s/Learn/blob/master/DesignPattern)
 7. [状态模式](https://github.com/My1iJ3oe6s/Learn/blob/master/DesignPattern)
 8. [代理模式](https://github.com/My1iJ3oe6s/Learn/blob/master/DesignPattern)
-8. [策略模式](https://github.com/My1iJ3oe6s/Learn/blob/master/DesignPattern/StrategyPattern)
+8. [策略模式](https://github.com/My1iJ3oe6s/Learn/blob/master/DesignPattern/StrategyPattern.md)
