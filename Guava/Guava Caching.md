@@ -16,8 +16,10 @@ GuavaCache是google开源java类库Guava的其中一个模块，在maven工程�
 ```
 
 ### Cache的作用
-> 提供一个存储缓存的容器，该容器实现了存放（Put）和读取（Get）缓存的接口供外部调用。 缓存通常以<key,value>的形式存在，通过key来从缓存中获取value。
-
+```
+提供一个存储缓存的容器，该容器实现了存放（Put）和读取（Get）缓存的接口供外部调用。 缓存通常以<key,value>的形式存在，通过key来从缓存中
+获取value。
+```
 ### Cache的api
 ```
 @Beta
@@ -89,12 +91,14 @@ Map<String, String> m = cache.get(key, new Callable<Map<String, String>>() {
 这应该是最常用的清除策略，在构建Cache实例的时候，CacheBuilder提供两种基于存活时间的构建方法：
 （1）expireAfterAccess(long, TimeUnit)：缓存项在创建后，在给定时间内没有被读/写访问，则清除。
 （2）expireAfterWrite(long, TimeUnit)：缓存项在创建后，在给定时间内没有被写访问（创建或覆盖），则清除。
-expireAfterWrite()方法有些类似于redis中的expire命令，但显然它只能设置所有缓存都具有相同的存活时间。若遇到一些缓存数据的存活时间为1分钟，一些为5分钟，那只能构建两个Cache实例了。
+expireAfterWrite()方法有些类似于redis中的expire命令，但显然它只能设置所有缓存都具有相同的存活时间。若遇到一些缓存数据的存活时间为1分钟，一些为
+5分钟，那只能构建两个Cache实例了。
 
 ###### 基于容量的清除（size-based eviction）
 
-在构建Cache实例的时候，通过CacheBuilder.maximumSize(long)方法可以设置Cache的最大容量数，当缓存数量达到或接近该最大值时，Cache将清除掉那些最近最少使用的缓存。
-以上是这种方式是以缓存的“数量”作为容量的计算方式，还有另外一种基于“权重”的计算方式。比如每一项缓存所占据的内存空间大小都不一样，可以看作它们有不同的“权重”（weights）。你可以使用CacheBuilder.weigher(Weigher)指定一个权重函数，并且用CacheBuilder.maximumWeight(long)指定最大总重。
+在构建Cache实例的时候，通过CacheBuilder.maximumSize(long)方法可以设置Cache的最大容量数，当缓存数量达到或接近该最大值时，Cache将清除掉那些最近最
+少使用的缓存。以上是这种方式是以缓存的“数量”作为容量的计算方式，还有另外一种基于“权重”的计算方式。比如每一项缓存所占据的内存空间大小都不一样，可以
+看作它们有不同的“权重”（weights）。你可以使用CacheBuilder.weigher(Weigher)指定一个权重函数，并且用CacheBuilder.maximumWeight(long)指定最大总重。
 
 ###### 显式清除
 
@@ -105,8 +109,9 @@ expireAfterWrite()方法有些类似于redis中的expire命令，但显然它只
 
 ### 清除什么时候发生？
 ```
-也许这个问题有点奇怪，如果设置的存活时间为一分钟，难道不是一分钟后这个key就会立即清除掉吗？我们来分析一下如果要实现这个功能，那Cache中就必须存在线程来进行周期性地检查、清除等工作，很多cache如redis、ehcache都是这样实现的。
-但在GuavaCache中，并不存在任何线程！它实现机制是在写操作时顺带做少量的维护工作（如清除），偶尔在读操作时做（如果写操作实在太少的话），也就是说在使用的是调用线程，参考如下示例：
+也许这个问题有点奇怪，如果设置的存活时间为一分钟，难道不是一分钟后这个key就会立即清除掉吗？我们来分析一下如果要实现这个功能，那Cache中就必须存在线
+程来进行周期性地检查、清除等工作，很多cache如redis、ehcache都是这样实现的。但在GuavaCache中，并不存在任何线程！它实现机制是在写操作时顺带做少量的
+维护工作（如清除），偶尔在读操作时做（如果写操作实在太少的话），也就是说在使用的是调用线程，参考如下示例：
 ```
 ###### 例子
 ```
@@ -135,3 +140,52 @@ null
 null
 //可以看出key=1的值在超时的时候没有被删除,而当调用get()的时候已经取不到值,应该在此时删除
 ```
+
+###### 例子
+```
+ public static void main(String[] args) throws ExecutionException, InterruptedException {
+	        //缓存接口这里是LoadingCache，LoadingCache在缓存项不存在时可以自动加载缓存
+	        LoadingCache<Integer,String> studentCache
+	                //CacheBuilder的构造函数是私有的，只能通过其静态方法newBuilder()来获得CacheBuilder的实例
+	                = CacheBuilder.newBuilder()
+	                //设置并发级别为8，并发级别是指可以同时写缓存的线程数
+	                .concurrencyLevel(8)
+	                //设置写缓存后8秒钟过期
+	                .expireAfterWrite(8, TimeUnit.SECONDS)
+	                //设置缓存容器的初始容量为10
+	                .initialCapacity(10)
+	                //设置缓存最大容量为100，超过100之后就会按照LRU最近虽少使用算法来移除缓存项
+	                .maximumSize(100)
+	                //设置要统计缓存的命中率
+	                .recordStats()
+	                //设置缓存的移除通知
+	                //======================================
+	                //build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
+	                .build(
+	                        new CacheLoader<Integer, String>() {
+	                            @Override
+	                            public String load(Integer key) throws Exception {
+	                                System.out.println("load student " + key);
+	                               
+	                                return key.toString();
+	                            }
+	                        }
+	                );
+
+	        for (int i=0;i<20;i++) {
+	            //从缓存中得到数据，由于我们没有设置过缓存，所以需要通过CacheLoader加载缓存数据
+	            String student = studentCache.get(1);
+	            System.out.println(student);
+	            //休眠1秒
+	            TimeUnit.SECONDS.sleep(1);
+	        }
+
+	        System.out.println("cache stats:");
+	        //最后打印缓存的命中率等 情况
+	        System.out.println(studentCache.stats().toString());
+	    }
+```
+
+### 查看缓存移除的监听
+[缓存移除监听](http://blog.csdn.net/aitangyong/article/details/53127605)
+
