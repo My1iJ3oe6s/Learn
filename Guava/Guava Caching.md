@@ -63,3 +63,19 @@ public interface Cache<K, V> {
 }
 
 ```
+
+### 创建案例
+```
+public static Cache<String, Map<String, String>> cache = CacheBuilder.newBuilder()
+			.expireAfterAccess(1, TimeUnit.HOURS).maximumSize(10).build();
+
+Map<String, String> m = cache.get(key, new Callable<Map<String, String>>() {
+				@Override
+				public Map<String, String> call() {
+					Map<String, String> map = Maps.newHashMap();
+                    map.put("key", "value");
+					return map;
+				}
+			});
+
+```
