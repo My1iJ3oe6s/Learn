@@ -103,3 +103,35 @@ expireAfterWrite()方法有些类似于redis中的expire命令，但显然它只
 （2）批量清除：Cache.invalidateAll(keys)
 （3）清除所有缓存项：Cache.invalidateAll()
 
+### 清除什么时候发生？
+```
+也许这个问题有点奇怪，如果设置的存活时间为一分钟，难道不是一分钟后这个key就会立即清除掉吗？我们来分析一下如果要实现这个功能，那Cache中就必须存在线程来进行周期性地检查、清除等工作，很多cache如redis、ehcache都是这样实现的。
+但在GuavaCache中，并不存在任何线程！它实现机制是在写操作时顺带做少量的维护工作（如清除），偶尔在读操作时做（如果写操作实在太少的话），也就是说在使用的是调用线程，参考如下示例：
+```
+###### 例子
+```
+public static Cache<Integer, String> cacheTest = CacheBuilder.newBuilder()
+			.expireAfterWrite(5, TimeUnit.SECONDS).maximumSize(10).build();
+	
+	public static void main(String[] args) throws InterruptedException {
+		cacheTest.put(1, "a");
+		System.out.println(cacheTest.getIfPresent(1));
+		Thread.sleep(1000);
+		cacheTest.put(2, "b");
+		Thread.sleep(2000);
+		cacheTest.put(3, "c");
+		Thread.sleep(2000);
+		System.out.println(cacheTest.size());
+		System.out.println(cacheTest.getIfPresent(1));
+		System.out.println(cacheTest.size());
+	}
+```
+###### 结果
+```
+a
+3
+null
+2
+null
+//可以看出key=1的值在超时的时候没有被删除,而当调用get()的时候已经取不到值,应该在此时删除
+```
