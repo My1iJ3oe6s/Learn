@@ -2,7 +2,10 @@
 
 ### 前言
 ```
-在多线程高并发场景中往往是离不开cache的，需要根据不同的应用场景来需要选择不同的cache，比如分布式缓存如redis、memcached，还有本地（进程内）缓存如ehcache、GuavaCache。之前用spring cache的时候集成的是ehcache，但接触到GuavaCache之后，被它的简单、强大、及轻量级所吸引。它不需要配置文件，使用起来和ConcurrentHashMap一样简单，而且能覆盖绝大多数使用cache的场景需求！
+在多线程高并发场景中往往是离不开cache的，需要根据不同的应用场景来需要选择不同的cache，比如分布式缓存如redis、memcached，
+还有本地（进程内）缓存如ehcache、GuavaCache。之前用spring cache的时候集成的是ehcache，但接触到GuavaCache之后，被它的
+简单、强大、及轻量级所吸引。它不需要配置文件，使用起来和ConcurrentHashMap一样简单，而且能覆盖绝大多数使用cache的
+场景需求！
 
 GuavaCache是google开源java类库Guava的其中一个模块，在maven工程下使用可在pom文件加入如下依赖：
 ```
@@ -17,8 +20,8 @@ GuavaCache是google开源java类库Guava的其中一个模块，在maven工程�
 
 ### Cache的作用
 ```
-提供一个存储缓存的容器，该容器实现了存放（Put）和读取（Get）缓存的接口供外部调用。 缓存通常以<key,value>的形式存在，通过key来从缓存中
-获取value。
+提供一个存储缓存的容器，该容器实现了存放（Put）和读取（Get）缓存的接口供外部调用。 缓存通常以<key,value>的形式存在，
+通过key来从缓存中获取value。
 ```
 ### Cache的api
 ```
