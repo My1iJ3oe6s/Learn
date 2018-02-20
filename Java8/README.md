@@ -41,7 +41,10 @@ Lambda 是一个匿名函数，我们可以把 Lambda 表达式理解为是一�
 |Consumer<T>消费型接口|T|void|对类型T的参数应用操作，方法： accept（T t）|
 |Supplier<T>供给型接口|无|T|返回类型T的对象 方法： get（）|
 |Function<T,R>函数型接口|T|R|对类型位T 的对象操作放回R类型的对象 方法：R apply（T t）|
-|Predicate|T|boolean|确定类型为T的对象是否满足某种约束 方法： Boolean test（T t）|
+|Predicate断定型接口|T|boolean|确定类型为T的对象是否满足某种约束 方法： Boolean test（T t）|
+ 
+ 
+
 
 
 
