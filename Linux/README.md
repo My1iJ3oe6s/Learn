@@ -88,6 +88,18 @@ su - 用户名
 |head|指定看从头多少行的内容| -n+数字 显示查看的行数|
 |tail|查看文件末尾的几行内容|-n+数字  指定行数 -f  实时监控某个文件|
 
+
+```
+实例:
+1. 查询文本中的关键字
+grep '14:05:49.728' /opt/starpost-webservice/log/starpost.2018-03-02.log
+2. 查看实时的日志
+tail -f /opt/starpost/log/starpost.2018-03-01.log
+3. 查看全部文件
+less  /opt/starpost-webservice/log/starpost.2018-02-23.log
+```
+
+
 ###### 操作指令
 |名称|指令|参数|
 |-|-|-|
