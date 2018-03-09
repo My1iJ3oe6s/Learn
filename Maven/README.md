@@ -6,6 +6,7 @@
   version: 项目的版本
 ```
 
+#### Maven跳过测试
 ```
 Maven跳过测试
 mvn clean install -Dmaven.test.skip=true
