@@ -28,3 +28,23 @@ start方法是启动一个线程，而线程中的run方法来完成实际的操
 2.sleep是Threa的静态方法，是用来控制线程自身流程的，而wait是object的方法，用于进行线程通信。
 3.两者使用的区域不同。sleep可以在任何地方使用，wait必须放在同步控制方法，或者语句块中执行。
 ```
+
+
+#### 创建callable线程
+```
+public static void main(String[] args) throws InterruptedException, ExecutionException {
+		
+		FutureTask<String> fu = new FutureTask<>(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				// TODO Auto-generated method stub
+				return String.valueOf((new Random()).nextInt(10));
+			}
+		});
+		Thread thread = new Thread(fu);
+		thread.start();
+		thread.run();
+		String string = fu.get();
+		System.out.println(string);
+	}
+```
