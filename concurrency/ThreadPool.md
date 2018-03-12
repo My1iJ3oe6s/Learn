@@ -23,10 +23,13 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory,RejectedExecutionHandler handler);
     ...
 }
-
-//从上面的代码可以得知，ThreadPoolExecutor继承了AbstractExecutorService类，并提供了四个构造器，事实上，通过观察每
-个构造器的源码具体实现，发现前面三个构造器都是调用的第四个构造器进行的初始化工作。
 ```
+
+#### 2. ThreadPoolExecutor的构造参数
+
+    从上面的代码可以得知，ThreadPoolExecutor继承了AbstractExecutorService类，并提供了四个构造器，事实上，通过观察每
+个构造器的源码具体实现，发现前面三个构造器都是调用的第四个构造器进行的初始化工作。
+
 - corePoolSize：核心池的大小，这个参数跟后面讲述的线程池的实现原理有非常大的关系。在创建了线程池后，默认情况下，线程池中
   并没有任何线程，而是等待有任务到来才创建线程去执行任务，除非调用了prestartAllCoreThreads()或者prestartCoreThread()方法
   ，从这2个方法的名字就可以看出，是预创建线程的意思，即在没有任务到来之前就创建corePoolSize个线程或者一个线程。默认情况下，
@@ -44,8 +47,20 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 - workQueue：一个阻塞队列，用来存储等待执行的任务，这个参数的选择也很重要，会对线程池的运行过程产生重大影响，一般来说，这
   里的阻塞队列有以下几种选择：
 ```  
-ArrayBlockingQueue;
-LinkedBlockingQueue;
-SynchronousQueue;
+    ArrayBlockingQueue
+    LinkedBlockingQueue
+    SynchronousQueue
 ```
-   
+
+- threadFactory：线程工厂，主要用来创建线程；
+
+- handler：表示当拒绝处理任务时的策略，有以下四种取值：
+  ```
+    ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。 
+    ThreadPoolExecutor.DiscardPolicy：也是丢弃任务，但是不抛出异常。 
+    ThreadPoolExecutor.DiscardOldestPolicy：丢弃队列最前面的任务，然后重新尝试执行任务（重复此过程）
+    ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务 
+  ```
+  
+  #### 3. ThreadPoolExecutor的主要方法
+  
