@@ -209,5 +209,8 @@ public class Test {
 - callable返回的对象一定要将Future放在list集合中. 如果在for循环中使用get()方法,会导致该线程
 执行完取到结果才会往下走.
 
-
+#### 9.多线程的一般创建方式
+```
+final static ExecutorService exec = Executors.newCachedThreadPool();
+```
 
