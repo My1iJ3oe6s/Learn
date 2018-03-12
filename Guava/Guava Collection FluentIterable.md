@@ -2,9 +2,11 @@
 
 #### 1.FluentIterable介绍
 ```
-这次主要介绍是的是com.google.common.collect.FluentIterable.做为Java Iterable API的扩展，通过不同方式来提供功能类似于Java 8强大的”Streams” 库(in java.util.stream)。 
+这次主要介绍是的是com.google.common.collect.FluentIterable.做为Java Iterable API的扩展，通过不同方式来提供功能
+类似于Java 8强大的”Streams” 库(in java.util.stream)。 
 关键的不同点有: 
-1. 一个stream通常是一次消费的。当一次任何”终端操作”(findFirst()或iterator())被调用时,它会变得无效。尽管流实现并包含所有Iterable接口的方法，实际上它并没有真正这样做。所以为了避免上面的情况，我们需要避免repeat-iterability。 
+1. 一个stream通常是一次消费的。当一次任何”终端操作”(findFirst()或iterator())被调用时,它会变得无效。尽管流实现并
+	包含所有Iterable接口的方法，实际上它并没有真正这样做。所以为了避免上面的情况，我们需要避免repeat-iterability。 
 2. FluentIterable并没有提供Stream中许多功能,包括最小/最大,层次分明,减少,排序,非常强大的收集,内置支持并行流操作。 
 3. FluentIterable提供了一些”Stream”中并不包含的特性。 
 4. Streams提供了IntStream的变体，强烈推荐使用。 
