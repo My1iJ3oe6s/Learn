@@ -168,7 +168,8 @@ public class Test {
 
 		for (int i = 0; i < 20; i++) {
 			MyThreadPool<Integer> my = new MyThreadPool(i);
-			executor.submit(my);
+			Future<Integer> submit = executor.submit(my);
+			list.add(submit);
 			System.out.println("线程池中线程数目：" + executor.getPoolSize() + "，队列中等待执行的任务数目：" + executor.getQueue().size()
 					+ "，已执行玩别的任务数目：" + executor.getCompletedTaskCount());
 		}
@@ -204,6 +205,9 @@ public class Test {
 ###### 结论
     线创建核心线程的数量直到最大值, 在加进去的任务将放在队列中,当队列到达最大值时,创建新的线程,
     直到到达线程的最大值,若线程超过最大值时会出现异常,任务拒绝策略将生效.若没设置会出现异常.
+    
+    callable返回的对象一定要将Future放在list集合中. 如果在for循环中使用get()方法,会导致该线程
+    执行完取到结果才会往下走.
 
 
 
