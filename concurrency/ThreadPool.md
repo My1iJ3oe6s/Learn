@@ -27,7 +27,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
 #### 2. ThreadPoolExecutor的构造参数
 
-    从上面的代码可以得知，ThreadPoolExecutor继承了AbstractExecutorService类，并提供了四个构造器，事实上，通过观察每
+  从上面的代码可以得知，ThreadPoolExecutor继承了AbstractExecutorService类，并提供了四个构造器，事实上，通过观察每
 个构造器的源码具体实现，发现前面三个构造器都是调用的第四个构造器进行的初始化工作。
 
 - corePoolSize：核心池的大小，这个参数跟后面讲述的线程池的实现原理有非常大的关系。在创建了线程池后，默认情况下，线程池中
@@ -62,5 +62,11 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务 
   ```
   
-  #### 3. ThreadPoolExecutor的主要方法
+#### 3. ThreadPoolExecutor的主要方法
+- execute()方法实际上是Executor中声明的方法，在ThreadPoolExecutor进行了具体的实现，这个方法是ThreadPoolExecutor的核心方法，通过这个方法可以向线程池提交一个任务，交由线程池去执行。
+
+- submit()方法是在ExecutorService中声明的方法，在AbstractExecutorService就已经有了具体的实现，在ThreadPoolExecutor中并没有对其进行重写，这个方法也是用来向线程池提交任务的，但是它和execute()方法不同，它能够返回任务执行的结果，去看submit()方法的实现，会发现它实际上还是调用的execute()方法，只不过它利用了Future来获取任务执行结果（Future相关内容将在下一篇讲述）。
+
+- shutdown()和shutdownNow()是用来关闭线程池的。
+
   
