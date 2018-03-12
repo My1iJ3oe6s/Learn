@@ -46,9 +46,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 - workQueue：一个阻塞队列，用来存储等待执行的任务，这个参数的选择也很重要，会对线程池的运行过程产生重大影响，一般来说，这
   里的阻塞队列有以下几种选择：
 ```  
-    ArrayBlockingQueue
-    LinkedBlockingQueue
-    SynchronousQueue
+    ArrayBlockingQueue：基于数组的先进先出队列，此队列创建时必须指定大小；
+    LinkedBlockingQueue：基于链表的先进先出队列，如果创建时没有指定此队列大小，则默认为Integer.MAX_VALUE；
+    SynchronousQueue: 这个队列比较特殊，它不会保存提交的任务，而是将直接新建一个线程来执行新来的任务。
 ```
 
 - threadFactory：线程工厂，主要用来创建线程；
@@ -81,7 +81,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     
     private volatile boolean allowCoreThreadTimeOut;   //是否允许为核心线程设置存活时间
     
-    private volatile int   corePoolSize;     //核心池的大小（即线程池中的线程数目大于这个参数时，提交的任务会被放进任务缓存队列）
+    private volatile int   corePoolSize;     //核心池的大小（即线程池中的线程数目大于这个参数时，提交的任务会被放进任务
+                                             //缓存队列）
     
     private volatile int   maximumPoolSize;   //线程池最大能容忍的线程数
  
@@ -115,6 +116,94 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
 - 当线程池处于SHUTDOWN或STOP状态，并且所有工作线程已经销毁，任务缓存队列已经清空或执行结束后，线程池被设置为TERMINATED状态。
 
+#### 6.任务拒绝策略
+　   当线程池的任务缓存队列已满并且线程池中的线程数目达到maximumPoolSize，如果还有任务到来就会采取任务拒绝策略，
+     通常有以下四种策略：
+
+```
+    ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。
+    ThreadPoolExecutor.DiscardPolicy：也是丢弃任务，但是不抛出异常。
+    ThreadPoolExecutor.DiscardOldestPolicy：丢弃队列最前面的任务，然后重新尝试执行任务（重复此过程）
+    ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务
+```
+
+#### 7.线程池的关闭
+    ThreadPoolExecutor提供了两个方法，用于线程池的关闭，分别是shutdown()和shutdownNow()，其中：
+
+- shutdown()：不会立即终止线程池，而是要等所有任务缓存队列中的任务都执行完后才终止，但再也不会接受新的任务
+- shutdownNow()：立即终止线程池，并尝试打断正在执行的任务，并且清空任务缓存队列，返回尚未执行的任务
+
+#### ThreadPoolExecutor测试
+```
+public class MyThreadPool<V> implements Callable<V> {
+
+	private V taskNum;
+
+	public MyThreadPool(V taskNum) {
+		super();
+		this.taskNum = taskNum;
+	}
+
+	public V call() throws Exception {
+		Thread.currentThread().sleep(5000);
+		return taskNum;
+	}
+
+}
+```
+
+```
+public class Test {
+
+	// private final Integer a = 10 ;
+
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+		test1();
+	}
+
+	public static void test1() throws InterruptedException, ExecutionException {
+
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 20000, TimeUnit.MILLISECONDS,
+				new ArrayBlockingQueue<Runnable>(10));
+
+		for (int i = 0; i < 20; i++) {
+			MyThreadPool<Integer> my = new MyThreadPool(i);
+			executor.submit(my);
+			System.out.println("线程池中线程数目：" + executor.getPoolSize() + "，队列中等待执行的任务数目：" + executor.getQueue().size()
+					+ "，已执行玩别的任务数目：" + executor.getCompletedTaskCount());
+		}
+		executor.shutdown();
+
+	}
+
+}
+```
+###### 结果
+```
+线程池中线程数目：1，队列中等待执行的任务数目：0，已执行玩别的任务数目：0
+线程池中线程数目：2，队列中等待执行的任务数目：0，已执行玩别的任务数目：0
+线程池中线程数目：3，队列中等待执行的任务数目：0，已执行玩别的任务数目：0
+线程池中线程数目：4，队列中等待执行的任务数目：0，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：0，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：1，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：2，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：3，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：4，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：5，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：6，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：7，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：8，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：9，已执行玩别的任务数目：0
+线程池中线程数目：5，队列中等待执行的任务数目：10，已执行玩别的任务数目：0
+线程池中线程数目：6，队列中等待执行的任务数目：10，已执行玩别的任务数目：0
+线程池中线程数目：7，队列中等待执行的任务数目：10，已执行玩别的任务数目：0
+线程池中线程数目：8，队列中等待执行的任务数目：10，已执行玩别的任务数目：0
+线程池中线程数目：9，队列中等待执行的任务数目：10，已执行玩别的任务数目：0
+线程池中线程数目：10，队列中等待执行的任务数目：10，已执行玩别的任务数目：0
+```
+###### 结论
+    线创建核心线程的数量直到最大值, 在加进去的任务将放在队列中,当队列到达最大值时,创建新的线程,
+    直到到达线程的最大值,若线程超过最大值时会出现异常,任务拒绝策略将生效.若没设置会出现异常.
 
 
-  
+
