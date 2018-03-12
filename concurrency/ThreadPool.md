@@ -4,6 +4,7 @@
 
     java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类.
 
+#### 2. ThreadPoolExecutor的构造方法
 
 ```
 //在ThreadPoolExecutor类中提供了四个构造方法：
@@ -24,8 +25,6 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     ...
 }
 ```
-
-#### 2. ThreadPoolExecutor的构造参数
 
     从上面的代码可以得知，ThreadPoolExecutor继承了AbstractExecutorService类，并提供了四个构造器，事实上，通过观察每
     个构造器的源码具体实现，发现前面三个构造器都是调用的第四个构造器进行的初始化工作。
@@ -69,7 +68,36 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
 - shutdown()和shutdownNow()是用来关闭线程池的。
 
-#### 4. 线程池的状态
+#### 4. ThreadPoolExecutor重要成员变量解析
+
+```
+    private final BlockingQueue<Runnable> workQueue;              //任务缓存队列，用来存放等待执行的任务
+    
+    private final ReentrantLock mainLock = new ReentrantLock();   //线程池的主要状态锁，对线程池状态（比如线程池大小
+                                                              //、runState等）的改变都要使用这个锁
+    private final HashSet<Worker> workers = new HashSet<Worker>();  //用来存放工作集
+ 
+    private volatile long  keepAliveTime;    //线程存货时间   
+    
+    private volatile boolean allowCoreThreadTimeOut;   //是否允许为核心线程设置存活时间
+    
+    private volatile int   corePoolSize;     //核心池的大小（即线程池中的线程数目大于这个参数时，提交的任务会被放进任务缓存队列）
+    
+    private volatile int   maximumPoolSize;   //线程池最大能容忍的线程数
+ 
+    private volatile int   poolSize;       //线程池中当前的线程数
+ 
+    private volatile RejectedExecutionHandler handler; //任务拒绝策略
+ 
+    private volatile ThreadFactory threadFactory;   //线程工厂，用来创建线程
+ 
+    private int largestPoolSize;   //用来记录线程池中曾经出现过的最大线程数
+ 
+    private long completedTaskCount;   //用来记录已经执行完毕的任务个数
+```
+
+
+#### 5. 线程池的状态
 
 在ThreadPoolExecutor中定义了一个volatile变量，另外定义了几个static final变量表示线程池的各个状态：
 ```
