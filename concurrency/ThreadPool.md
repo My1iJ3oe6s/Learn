@@ -133,7 +133,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 - shutdown()：不会立即终止线程池，而是要等所有任务缓存队列中的任务都执行完后才终止，但再也不会接受新的任务
 - shutdownNow()：立即终止线程池，并尝试打断正在执行的任务，并且清空任务缓存队列，返回尚未执行的任务
 
-#### ThreadPoolExecutor测试
+#### 8.ThreadPoolExecutor测试
 ```
 public class MyThreadPool<V> implements Callable<V> {
 
@@ -203,11 +203,11 @@ public class Test {
 线程池中线程数目：10，队列中等待执行的任务数目：10，已执行玩别的任务数目：0
 ```
 ###### 结论
-    线创建核心线程的数量直到最大值, 在加进去的任务将放在队列中,当队列到达最大值时,创建新的线程,
-    直到到达线程的最大值,若线程超过最大值时会出现异常,任务拒绝策略将生效.若没设置会出现异常.
-    
-    callable返回的对象一定要将Future放在list集合中. 如果在for循环中使用get()方法,会导致该线程
-    执行完取到结果才会往下走.
+- 线创建核心线程的数量直到最大值, 在加进去的任务将放在队列中,当队列到达最大值时,创建新的线程,
+直到到达线程的最大值,若线程超过最大值时会出现异常,任务拒绝策略将生效.若没设置会出现异常.
+    
+- callable返回的对象一定要将Future放在list集合中. 如果在for循环中使用get()方法,会导致该线程
+执行完取到结果才会往下走.
 
 
 
