@@ -1,0 +1,8 @@
+## SSH SERVER
+
+#### 安装SSH server
+sudo apt-get install openssh-server openssh-client 
+
+
+#### 配置完成后重起： 
+sudo /etc/init.d/ssh restart
