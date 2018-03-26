@@ -52,3 +52,6 @@ export PATH=${JAVA_HOME}/bin:$PATH
  java -version
 
 
+## 重启linux 
+sudo reboot
+
