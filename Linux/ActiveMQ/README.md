@@ -14,4 +14,16 @@ talent 192.168.239.128 8161
 ## 关闭端口
 ps -ef | grep activemq 来得到进程号然后kill掉
 
+## 通过指定的配置文件来启动项目
+默认情况下start启动的配置文件是/conf下的activeMq.xml
+```
+./activemq start xbean:file: 文件的相对路径 
+```
+
+##java项目启动broker（即activemq的客户端）
+brokerService
+
+
+
+
 
