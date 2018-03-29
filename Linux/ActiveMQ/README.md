@@ -20,7 +20,7 @@ ps -ef | grep activemq 来得到进程号然后kill掉
 ./activemq start xbean:file: 文件的相对路径 
 ```
 
-##java项目启动broker（即activemq的客户端）
+## java项目启动broker（即activemq的客户端）
 brokerService
 
 
