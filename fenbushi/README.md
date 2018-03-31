@@ -35,6 +35,8 @@
 
 ##企业的架构
 
+```
+
 用户 -- 负载均衡（主） | -- 服务器应用   |-- 数据库mysql
                       |                |-- 数据库mysql
                       |                |-- 数据库mysql
@@ -45,3 +47,18 @@
 
 
         负载均衡（备）
+```
+
+## 高可用
+比如负载均衡在有备机的情况下称为高可用（HA）   keepalive
+
+
+## 负载均衡
+硬件和软件
+软件： LVS Nginx apache
+LVS + keepalive   linux虚拟服务器 ： 
+Nignx
+Apache + jk ： 
+
+
+
