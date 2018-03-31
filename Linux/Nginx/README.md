@@ -12,6 +12,8 @@ netstat -tulnp | grep :80
 ## 关闭
 kill -9 nginx
 
+## 
+
 
 
 
