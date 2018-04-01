@@ -35,3 +35,13 @@ vim /etc/rc.local
 pkill redis-server
 
 ```
+
+
+## redis集群
+
+redis的集群需要6台redis 分为三组 每组存的数据是一样的，每组设置主从（master slave） redis存数据通过算槽位的方式来判断放在那一台上，
+算法是通过对key进行hash算法。一共16638 槽位 平分到每组。
+
+
+
+
