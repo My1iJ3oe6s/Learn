@@ -13,6 +13,7 @@ netstat -tulnp | grep :80
 kill -9 nginx
 
 ./nginx -s quit  等待niginx的工作做完才关闭
+
 ./nginx -s stop  直接关闭
 
 
