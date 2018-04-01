@@ -45,6 +45,10 @@ proxy_pass http：//tomcat1；
 恢复添加
 
 ## nginx的备机方案（备机  高可用HA)
+安装  wget http://www.keepalived.org/software/keepalived-1.2.24.tar.gz
+      tar -zxvf keepalived-1.2.24.tar.gz
+
+
 
 
 
