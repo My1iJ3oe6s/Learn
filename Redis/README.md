@@ -18,3 +18,53 @@ Redis 也是键值对数据库，但和 Memcached 不同的是，Redis 的值不
 - 复制：为指定的 Redis 服务器创建一个或多个复制品，用于提升数据安全性，并分担读请求的负载。
 - Sentinel：监控 Redis 服务器的状态，并在服务器发生故障时，进行自动故障转移。
 - 集群：创建分布式数据库，每个服务器分别执行一部分写操作和读操作。
+
+
+## String 字符串
+Redis 中最简单的数据结构，它既可以储存文字（比如 "hello world"），又可以储存数字（比如整数 10086 和浮点数 3.14），还可以储存二进制数据（比如 10010100）。
+
+```
+SET key value
+将字符串键 key 的值设置为 value ，命令返回 OK 表示设置成功。 
+redis> SET msg "hello world"  OK
+```
+```
+SET key value [NX|XX]
+
+redis> SET nx-str "this will fail" XX                       # 键不存在，指定 XX 选项导致设置失败  
+(nil)  
+
+redis> SET nx-str "this will success" NX                    # 键不存在，所以指定 NX 选项是可行的  
+OK  
+
+redis> SET nx-str "this will fail" NX                       # 键已经存在，指定 NX 选项导致设置失败  
+(nil)  
+
+redis> SET nx-str "this will success again!" XX             # 键已经存在，指定 XX 选项是可行的  
+OK
+
+```
+SET 命令还支持可选的 NX 选项和 XX 选项：
+- 如果给定了 NX 选项，那么命令仅在键 key 不存在的情况下，才进行设置操作；如果键 key 已经存 在，那么 SET ... NX 命令不做动作（不会覆盖旧值）。 
+- 如果给定了 XX 选项，那么命令仅在键 key 已经存在的情况下，才进行设置操作；如果键 key 不存 在，那么 SET ... XX 命令不做动作（一定会覆盖旧值）。  
+- 在给定 NX 选项和 XX 选项的情况下，SET 命令在设置成功时返回 OK ，设置失败时返回 nil 。
+
+```
+获取字符串的值
+GET key
+
+  redis> SET msg "hello world"  
+  OK  
+  redis> GET msg  
+  hello world
+ 
+```
+
+使用 Redis 来进行缓存
+我们可以使用 Redis 来缓存一些经常会被用到、或者需要耗费大量资源的内容，通过将这些内容放到 Redis 里面（也即是内存里面），程序可以以极快的速度取得 这些内容。
+举个例子，对于一个网站来说，如果某个页面经常会被访问到，或者创建页面时耗费的资源比较多（比 如需要多次访问数据库、生成时间比较长，等等），那么我们可以使用 Redis 将这个页面缓存起来，减 轻网站的负担，降低网站的延迟值。
+ 
+
+
+
+ 
