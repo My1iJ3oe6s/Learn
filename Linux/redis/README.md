@@ -7,8 +7,9 @@ wget http://download.redis.io/releases/redis-4.0.1.tar.gz
 2.解压
 tar -zxvf redis-4.0.1.tar.gz
 3.编译
-make
-这里make的时候可能会失败  
+sudo make
+sudo make install
+这里make的时候可能会失败  
 未安装gcc  apt-get install gcc
 继续报错执行 make -tar xzf redis-4.0.1.tar.gz
 4.编译完成之后在/src目录下会出现 redis-servce 文件
