@@ -38,6 +38,10 @@ pkill redis-server
 ```
 
 
+#### Redis 启动警告解决 
+https://blog.csdn.net/kk185800961/article/details/53326465
+
+
 ## redis集群
 
 redis的集群需要6台redis 分为三组 每组存的数据是一样的，每组设置主从（master slave） redis存数据通过算槽位的方式来判断放在那一台上，
