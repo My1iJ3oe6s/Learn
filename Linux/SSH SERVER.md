@@ -13,6 +13,8 @@ netstat -a
 #### 安装SSH server
 sudo apt-get install openssh-server openssh-client 
 
+#### 安装servcer出现异常 如版本冲突
+sudo apt-get update
 
 #### 配置完成后重起： 
 sudo /etc/init.d/ssh restart
