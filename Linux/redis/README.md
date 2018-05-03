@@ -42,15 +42,15 @@ pkill redis-server
 https://blog.csdn.net/kk185800961/article/details/53326465
 
 #### Redis连接异常的解决办法
-> 在启动的时候可能存在Could not get a resource from the pool的问题  
-
+在启动的时候可能存在Could not get a resource from the pool的问题  
+```
 linux 的防火墙已关闭 ping ip也是通的,  这里需要注释掉配置文件里面的 bind 127.0.0.1(注释后,即允许其他设备访问)
-
-> 在注释之后可能存在redis正在受保护的状态下运行，并且给了你4中解决办法 
-
+```
+在注释之后可能存在redis正在受保护的状态下运行，并且给了你4中解决办法 
+```
 这里可以选择第四种提供一种验证的密码.需要在配置文件里面设置 "requirepass" 的属性  设置验证密码
-
-总结
+```
+##### 总结
 1. 查看ip是否ping的通
 2. 查看防火墙是否关闭,是否允许外界访问
 3. 修改redis配置文件中的本地绑定(# bind 127.0.0.1)
