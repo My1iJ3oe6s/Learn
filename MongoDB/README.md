@@ -5,6 +5,9 @@
 * [2.安装和配置](#安装和配置)
 * [3.体系结构](#体系结构)    
 * [4.shell操作命令](#shell操作命令)
+* [5.高级查询](#高级查询)
+* [6.游标](#游标)
+* [7.存储过程](#存储过程)
 
 ## 介绍
 
@@ -304,6 +307,155 @@ next(), 你可能得不到游标里的数据. 所以要明确的锁定你要查�
 { "_id" : ObjectId("4faa9e7dedd27e6d86d86371"), "x" : 3 }
 ```
 
+## 高级查询
+#### 1. 条件操作符
+```
+<, <=, >, >= 这个操作符就不用多解释了，最常用也是最简单的
+db.collection.find({ "field" : { $gt: value } } ); // 大于: field > value
+db.collection.find({ "field" : { $lt: value } } ); // 小于: field < value
+db.collection.find({ "field" : { $gte: value } } ); // 大于等于: field >= value
+db.collection.find({ "field" : { $lte: value } } ); // 小于等于: field <= value
+//如果要同时满足多个条件，可以这样做
+db.collection.find({ "field" : { $gt: value1, $lt: value2 } } ); // value1 < field < value
+```
+```
+> db.things.find({test:{$gt:15}})
+{ "_id" : ObjectId("5aed5d01383f72d1b26c2ec5"), "test" : 20 }
+{ "_id" : ObjectId("5aed5d01383f72d1b26c2ec6"), "test" : 20 }
+```
 
+#### 2. $all匹配所有
+这个操作符跟 SQL 语法的 in 类似，但不同的是, in 只需满足( )内的某一个值即可, 而$all 必
+须满足[ ]内的所有值，例如:
+```
+>db.users.find({age : {$all : [6, 8]}});
+{name: 'David', age: 26, age: [ 6, 8, 9 ] }
+//但查询不出 {name: 'David', age: 26, age: [ 6, 7, 9 ] }
+```
 
+#### 3. $exists 判断字段是否存在
+```
+> db.c1.find({age:{$exists:true}});
+{ "_id" : ObjectId("4fb4a773afa87dc1bed9432d"), "age" : 20, "length" : 30 }
+```
 
+#### 4. Null 值处理
+```
+> db.c2.find({age:{"$in":[null], "$exists":true}})
+{ "_id" : ObjectId("4fc34bb81d8a39f01cc17ef4"), "name" : "Lily", "age" : null }
+
+//这里必须带上这个属性是否存在的判断 负责会将不存在该属性的记录一并查询出来
+```
+
+#### 5. $mod取模运算
+```
+//查询 age 取模 10 等于 0 的数据
+db.student.find( { age: { $mod : [ 10 , 0 ] } } )
+```
+
+#### 6. $ne 不等于
+```
+//查询 x 的值不等于 3 的数据
+db.things.find( { x : { $ne : 3 } } );
+```
+
+#### 7. $in 包含
+```
+> db.c1.find({age:{$in: [7,8]}});
+{ "_id" : ObjectId("4fb4af85afa87dc1bed94330"), "age" : 7, "length_1" : 30 }
+{ "_id" : ObjectId("4fb4af89afa87dc1bed94331"), "age" : 8, "length_1" : 30 }
+```
+
+#### 8. $nin 不包含
+```
+> db.c1.find({age:{$nin: [7,8]}});
+{ "_id" : ObjectId("4fb4af8cafa87dc1bed94332"), "age" : 6, "length_1" : 30 }
+```
+
+#### 9. 正则表达式匹配
+```
+//查询 name 不以 T 开头的数据
+> db.c1.find({name: {$not: /^T.*/}});
+{ "_id" : ObjectId("4fb5fab96d0f9d8ea3fc91a9"), "name" : "Joe", "age" : 10 }
+```
+
+#### 10. Javascript 查询和$where 查询
+```
+查询 a 大于 3 的数据，下面的查询方法殊途同归
+1. db.c1.find( { a : { $gt: 3 } } );
+2. db.c1.find( { $where: "this.a > 3" } );
+3. db.c1.find("this.a > 3");
+4. f = function() { return this.a > 3; } db.c1.find(f);
+```
+
+#### 11. count 查询记录条数
+```
+db.users.find().count();  //总记录数
+
+db.users.find().skip(10).limit(5).count(true);
+//查询从第10条开始的5条记录
+//skip  从第几条开始
+//limit 返回几条记录
+```
+
+#### 12. sort排序
+以年龄升序 asc
+db.users.find().sort({age: 1});
+以年龄降序 desc
+db.users.find().sort({age: -1});
+```
+> db.c1.find().sort({age: 1});
+{ "_id" : ObjectId("4fb5fab96d0f9d8ea3fc91a9"), "name" : "Joe", "age" : 10 }
+{ "_id" : ObjectId("4fb5faaf6d0f9d8ea3fc91a8"), "name" : "Tony", "age" : 20 }
+```
+
+## 游标
+
+## 存储过程
+  MongoDB 同样支持存储过程。关于存储过程你需要知道的第一件事就是它是用` javascript `来
+写的。也许这会让你很奇怪，为什么它用 javascript 来写，但实际上它会让你非常满意，
+MongoDB 存储过程是存储在` db.system.js `表中的，我们想象一个简单的 sql 自定义函数如下：
+```
+function addNumbers( x , y ) {
+  return x + y;
+}
+```
+
+下面我们将这个 sql 自定义函数转换为 MongoDB 的存储过程:
+```
+> db.system.js.save({_id:"addNumbers", value:function(x, y){ return x + y; }});
+```
+
+存储过程可以被查看，修改和删除，所以我们用 find 来查看一下是否这个存储过程已经被
+创建上了。
+```
+> db.system.js.find()
+{ "_id" : "addNumbers", "value" : function cf__1__f_(x, y) {
+return x + y;
+} }
+>
+```
+
+这样看起来还不错，下面我看来实际调用一下这个存储过程:
+```
+> db.eval('addNumbers(3, 4.2)');
+7.2
+>
+```
+
+db.eval()是一个比较奇怪的东西，我们可以将存储过程的逻辑直接在里面并同时调用，而无
+需事先声明存储过程的逻辑。
+```
+> db.eval( function() { return 3+3; } );
+6
+>
+```
+
+  从上面可以看出， MongoDB 的存储过程可以方便的完成算术运算，但其它数据库产品在存
+储过程中可以处理数据库内部的一些事情，例如取出某张表的数据量等等操作，这些
+MongoDB 能做到吗？答案是肯定的， MongoDB 可以轻而易举的做到，看下面的实例吧:
+```
+> db.system.js.save({_id:"get_count", value:function(){ return db.c1.count(); }});
+> db.eval('get_count()')
+2
+```
