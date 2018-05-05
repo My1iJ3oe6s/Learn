@@ -2,7 +2,7 @@
 
 目录
 * [1.介绍](#介绍)
-* [2.安装和配置](#面向集合)
+* [2.安装和配置](#安装和配置)
 
 ## 介绍
 
@@ -58,8 +58,43 @@ Notation.”
 
 ## 安装和配置
 
+1. MongoDB安装很简单，无需下载源文件，可以直接用apt-get命令进行安装。 
+```
+sudo apt-get install mongodb
 
-
-
-
-
+//通过获取压缩文件安装
+curl -O http://fastdl.mongodb.org/linux/mongodb-linux-i686-1.8.1.tgz
+```
+2. 查看当前MongoDB的版本
+```
+mongo -version
+```
+3. 启动和关闭mongodb命令如下：
+```
+service mongodb start
+service mongodb stop
+```
+4. 输入以下命令查看是否启动成功：
+```
+pgrep mongo -l   #注意：-l是英文字母l，不是阿拉伯数字1
+```
+5. 卸载MongoDB
+```
+sudo apt-get --purge remove mongodb mongodb-clients mongodb-server
+```
+6.shell命令模式
+输入mongo进入shell命令模式，默认连接的数据库是test数据库，在此之前一定要确保你已经启动了MongoDB，
+否则会出现错误，启动之后运行成功，如下截图： 
+```
+mongo
+```
+7. 常用操作命令：
+```
+数据库相关 
+show dbs:显示数据库列表 
+show collections：显示当前数据库中的集合（类似关系数据库中的表table） 
+show users：显示所有用户 
+use yourDB：切换当前数据库至yourDB 
+db.help() ：显示数据库操作命令 
+db.yourCollection.help() ：显示集合操作命令，yourCollection是集合名 
+```
