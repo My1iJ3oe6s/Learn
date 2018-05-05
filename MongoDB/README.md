@@ -201,12 +201,51 @@ use dbname
 { "_id" : ObjectId("4c2209fef3924d31102bd84b"), "x" : 3 }
 ```
 
-3. _id key
-存储在 MongoDB 集合中的每个文档（ document）都有一个默认的主键_id，这个主键名称是
+3. _id key_
+  存储在 MongoDB 集合中的每个文档（ document）都有一个默认的主键_id，这个主键名称是
 固定的，它可以是 MongoDB 支持的任何数据类型，默认是 ObjectId。在关系数据库 schema
 设计中，主键大多是数值型的，比如常用的 int 和 long，并且更通常的是主键的取值由数据
 库自增获得，这种主键数值的有序性有时也表明了某种逻辑。反观 MongoDB，它在设计之
 初就定位于分布式存储系统，所以它原生的不支持自增主键。
+
+4. 通过for循环添加数据
+```
+for( var i = 1; i < 10; i++ ) db.things.save( { x:4, j:i } ); > db.things.find();
+{"name" : "mongo" , "_id" : ObjectId("497cf60751712cf7758fbdbb")}
+{"x" : 3 , "_id" : ObjectId("497cf61651712cf7758fbdbc")}
+{"x" : 4 , "j" : 1 , "_id" : ObjectId("497cf87151712cf7758fbdbd")}
+{"x" : 4 , "j" : 2 , "_id" : ObjectId("497cf87151712cf7758fbdbe")}
+{"x" : 4 , "j" : 3 , "_id" : ObjectId("497cf87151712cf7758fbdbf")}
+{"x" : 4 , "j" : 4 , "_id" : ObjectId("497cf87151712cf7758fbdc0")}
+{"x" : 4 , "j" : 5 , "_id" : ObjectId("497cf87151712cf7758fbdc1")}
+```
+
+5. 查询记录
+```
+// 打印所有的文档
+> var cursor = db.things.find();        //返回一个游标对象
+> while (cursor.hasNext()) printjson(cursor.next());      //通过游标判断是否存在下个值
+{ "_id" : ObjectId("4c2209f9f3924d31102bd84a"), "name" : "mongo" }
+{ "_id" : ObjectId("4c2209fef3924d31102bd84b"), "x" : 3 }
+{ "_id" : ObjectId("4c220a42f3924d31102bd856"), "x" : 4, "j" : 1 }
+{ "_id" : ObjectId("4c220a42f3924d31102bd857"), "x" : 4, "j" : 2 }
+{ "_id" : ObjectId("4c220a42f3924d31102bd858"), "x" : 4, "j" : 3 }
+```
+  当我们使用的是 JavaScript shell, 可以用到 JS 的特性, forEach 就可以输出游标了. 下面的例
+子就是使用 forEach() 来循环输出: forEach() 必须定义一个函数供每个游标元素调用.
+```
+> db.things.find().forEach(printjson);
+{ "_id" : ObjectId("4c2209f9f3924d31102bd84a"), "name" : "mongo" }
+{ "_id" : ObjectId("4c2209fef3924d31102bd84b"), "x" : 3 }
+{ "_id" : ObjectId("4c220a42f3924d31102bd856"), "x" : 4, "j" : 1 }
+```
+在 MongoDB shell 里, 我们也可以把游标当作数组来用:
+```
+> var cursor = db.things.find();
+> printjson(cursor[4]);
+{ "_id" : ObjectId("4c220a42f3924d31102bd858"), "x" : 4, "j" : 3 }
+```
+
 
 
 
