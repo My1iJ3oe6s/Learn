@@ -245,6 +245,64 @@ for( var i = 1; i < 10; i++ ) db.things.save( { x:4, j:i } ); > db.things.find()
 > printjson(cursor[4]);
 { "_id" : ObjectId("4c220a42f3924d31102bd858"), "x" : 4, "j" : 3 }
 ```
+使用游标时候请注意占用内存的问题, 特别是很大的游标对象, 有可能会内存溢出. 所以应
+该用迭代的方式来输出. 下面的示例则是把游标转换成真实的数组类型:
+```
+> var arr = db.things.find().toArray();
+> arr[5];
+{ "_id" : ObjectId("4c220a42f3924d31102bd859"), "x" : 4, "j" : 4 }
+```
+
+>  请注意这些特性只是在 MongoDB shell 里使用, 而不是所有的其他应用程序驱动都支持.
+MongoDB 游标对象不是没有快照，如果有其他用户在集合里第一次或者最后一次调用
+next(), 你可能得不到游标里的数据. 所以要明确的锁定你要查询的游标.
+
+6. 条件查询
+```
+//select * from things where name = "mongo"
+> db.things.find({name:"mongo"}).forEach(printjson);
+{ "_id" : ObjectId("4c2209f9f3924d31102bd84a"), "name" : "mongo" }
+
+//查询条件是 { a:A, b:B, … } 类似 “ where a==A and b==B and …” .
+```
+```
+//返回指定的字段
+> db.things.find({x:4}, {j:true}).forEach(printjson);
+{ "_id" : ObjectId("4c220a42f3924d31102bd856"), "j" : 1 }
+{ "_id" : ObjectId("4c220a42f3924d31102bd857"), "j" : 2 }
+
+//SELECT j FROM things WHERE x=4
+```
+仅查询一条记录 (避免游标可能带来的开销)
+```
+> printjson(db.things.findOne({name:"mongo"}));
+{ "_id" : ObjectId("4c2209f9f3924d31102bd84a"), "name" : "mongo" }
+```
+通过 limit 限制结果集数量
+```
+> db.things.find().limit(3);
+{ "_id" : ObjectId("4c2209f9f3924d31102bd84a"), "name" : "mongo" }
+{ "_id" : ObjectId("4c2209fef3924d31102bd84b"), "x" : 3 }
+{ "_id" : ObjectId("4c220a42f3924d31102bd856"), "x" : 4, "j" : 1 }
+```
+
+7. 修改记录
+```
+> db.things.update({name:"mongo"},{$set:{name:"mongo_new"}});
+
+> db.things.find();
+{ "_id" : ObjectId("4faa9e7dedd27e6d86d86371"), "x" : 3 }
+{ "_id" : ObjectId("4faa9e7bedd27e6d86d86370"), "name" : "mongo_new" }
+
+//该命令一次仅能修改一条
+```
+
+8. 删除记录 
+```
+> db.things.remove({name:"mongo_new"});
+> db.things.find();
+{ "_id" : ObjectId("4faa9e7dedd27e6d86d86371"), "x" : 3 }
+```
 
 
 
