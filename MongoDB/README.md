@@ -125,5 +125,14 @@ MongoDB 的逻辑结构是一种层次结构。主要由：
 |集合(collection)|表(table)|
 |文档(document)|行(row)|
 
+数据存储结构:
+  MongoDB 的默认数据目录是/data/db，它负责存储所有的 MongoDB 的数据文件。在 MongoDB
+内部，每个数据库都包含一个.ns 文件和一些数据文件，而且这些数据文件会随着数据量的
+增加而变得越来越多。所以如果系统中有一个叫做 foo 的数据库，那么构成 foo 这个数据库
+的文件就会由 foo.ns， foo.0， foo.1， foo.2 等等组成，具体如下:
+
+
+
+## MongoDB shell 操作命令
 
 
