@@ -3,8 +3,8 @@
 目录
 * [1.介绍](#介绍)
 * [2.安装和配置](#安装和配置)
-* [3.体系结构](#体系结构)
-
+* [3.体系结构](#体系结构)    
+* [4.MongoDB shell 操作命令介绍](#MongoDB shell 操作命令介绍)
 
 ## 介绍
 
@@ -100,6 +100,10 @@ use yourDB：切换当前数据库至yourDB
 db.help() ：显示数据库操作命令 
 db.yourCollection.help() ：显示集合操作命令，yourCollection是集合名 
 ```
+8.查看mongo安装文件的位置
+```
+whereis mongo
+```
 
 
 ## 体系结构
@@ -133,6 +137,6 @@ MongoDB 的逻辑结构是一种层次结构。主要由：
 
 
 
-## MongoDB shell 操作命令
+## MongoDB shell 操作命令介绍
 
 
