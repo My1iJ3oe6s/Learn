@@ -3,6 +3,8 @@
 目录
 * [1.介绍](#介绍)
 * [2.安装和配置](#安装和配置)
+* [3.体系结构](#体系结构)
+
 
 ## 介绍
 
@@ -84,7 +86,7 @@ sudo apt-get --purge remove mongodb mongodb-clients mongodb-server
 ```
 6.shell命令模式
 输入mongo进入shell命令模式，默认连接的数据库是test数据库，在此之前一定要确保你已经启动了MongoDB，
-否则会出现错误，启动之后运行成功，如下截图： 
+否则会出现错误： 
 ```
 mongo
 ```
@@ -98,3 +100,18 @@ use yourDB：切换当前数据库至yourDB
 db.help() ：显示数据库操作命令 
 db.yourCollection.help() ：显示集合操作命令，yourCollection是集合名 
 ```
+
+
+## 体系结构
+  MongoDB 是一个可移植的数据库，它在流行的每一个平台上都可以使用，即所谓的跨平台
+特性。在不同的操作系统上虽然略有差别，但是从整体构架上来看， MongoDB 在不同的平
+台上是一样的，如数据逻辑结构和数据的存储等等。
+
+  一个运行着的 MongoDB 数据库就可以看成是一个 <font color="#dd0000">MongoDB Server</font>，该 Server 由实例和数据
+库组成，在一般的情况下一个 MongoDB Server 机器上包含一个实例和多个与之对应的数据
+库，但是在特殊情况下，如硬件投入成本有限或特殊的应用需求，也允许一个 Server 机器
+上可以有多个实例和多个数据库
+
+
+
+
