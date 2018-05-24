@@ -79,7 +79,7 @@ redis> HDEL message "date"
 ```
 一次设置或获取散列中的多个域值对
 HMSET key field value [field value ...] 
-HMGET key field [field ...] 
+ HMGET key field [field ...] 
 
 redis> HMSET message "id" 10086 "sender" "peter" "receiver" "jack" 
 OK
@@ -128,7 +128,7 @@ redis> HINCRBYFLOAT numbers x 3.14    # 浮点数计算
 |HEXISTS| EXISTS|
 
 
-###使用散列的好处
+### 使用散列的好处
 （1）：将数据放到同一个地方
 散列可以让我们将一些相关的信息储存在同一个地方，而不是直接分散地 储存在整个数据库里面，这不 仅方便了数据管理，还可以尽量避免误操作发生。
  
