@@ -147,6 +147,7 @@ rpm -ivh 。。。。。。。
 ```
 rpm的查询功能（是否安装某个包）
 rpm -qa zsh  
+```
 
 which zsh  （获取某个软件包的位置）
 rpm -qf /usr/bin/zsh
