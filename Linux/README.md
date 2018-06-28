@@ -159,6 +159,7 @@ rpm -uvh 。。。。 更新
 ```
 查找某个目录下的文件
 find /etc/ -type f 
+find / -name 'mysql'
 find /etc/ -type f | cpio   备份这些文件
 ```
 
