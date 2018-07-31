@@ -11,3 +11,8 @@
 Maven跳过测试
 mvn clean install -Dmaven.test.skip=true
 ```
+
+#### 项目打包
+```
+mvn clean install -Pdev -Dskiptests
+```
